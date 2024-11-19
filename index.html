@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>To-Do List</title>
+<style>
+    body {
+        font-family:'Papyrus', sans-serif;
+        font-weight: bold;
+        background: #f9e7ee;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .todo-container {
+        width: 310px;
+        background: #faebf1;
+        padding: 40px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    #new-task {
+        width: 100%;
+        padding: 10px;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+    }
+
+    #task-date, #task-time {
+        width: 100%;
+        padding: 10px;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+    }
+
+    .buttons button {
+        padding: 5px 10px;
+        margin-right: 5px;
+        cursor: pointer;
+        border:none;
+        outline:none;
+        background:#7b76fa;
+        color:#fff;
+        font-size:15px;
+        border-radius:30px;
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    li {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        position: relative;
+    }
+
+    li:last-child {
+        border-bottom: none;
+    }
+
+    li.completed {
+        color: #888;
+        text-decoration: line-through;
+    }
+
+    h2{
+        text-align: center;
+    }
+    
+    input{
+        flex:1;
+        border:none;
+        outline:none;
+        background:white;
+        padding:20px;
+        border-radius:30px;
+    }
+
+    .task-time {
+        display: block;
+        font-size: 12px;
+        color: #888;
+        margin-top: 5px;
+    }
+
+    img{
+        mix-blend-mode: multiply;
+    }
+
+</style>
+</head>
+<body>
+<div class="todo-container">
+    <h2>TO-DO LIST APP <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOQf5s1tmZ6t5Xh2_xBkG9z4YaUMuIR5g5Hw&s"></h2>
+    
+    <!-- Task Input -->
+    <input type="text" id="new-task" placeholder="Add a new task">
+    
+    <!-- Date and Time Input -->
+    <input type="date" id="task-date">
+    <input type="time" id="task-time">
+    
+    <div class="buttons">
+        <button onclick="filterTasks('all')">All</button>
+        <button onclick="filterTasks('pending')">Pending</button>
+        <button onclick="filterTasks('completed')">Completed</button>
+        <button onclick="clearTasks()">Clear all</button>
+    </div>
+    
+    <ul id="task-list">
+        <!-- Tasks will appear here -->
+    </ul>
+</div>
+<script>
+    // Adding event listener to handle task addition with 'Enter' key
+    document.getElementById('new-task').addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') {
+            addTask(this.value);
+            this.value = '';
+        }
+    });
+
+    // Function to add a new task with user-set date and time
+    function addTask(task) {
+        const taskList = document.getElementById('task-list');
+        const li = document.createElement('li');
+        
+        // Get user-set date and time
+        const taskDate = document.getElementById('task-date').value;
+        const taskTime = document.getElementById('task-time').value;
+        
+        if (!taskDate || !taskTime || !task) {
+            alert('Please fill in all fields!');
+            return;
+        }
+
+        // Create task content with date and time
+        li.innerHTML = `${task} <span class="task-time">${taskDate} - ${taskTime}</span>`;
+        
+        li.onclick = function() {
+            this.classList.toggle('completed');
+        };
+        taskList.appendChild(li);
+    }
+
+    // Function to filter tasks based on their status (all, completed, pending)
+    function filterTasks(filter) {
+        const lis = document.querySelectorAll('#task-list li');
+        lis.forEach(li => {
+            switch (filter) {
+                case 'all':
+                    li.style.display = 'block';
+                    break;
+                case 'completed':
+                    if (li.classList.contains('completed')) {
+                        li.style.display = 'block';
+                    } else {
+                        li.style.display = 'none';
+                    }
+                    break;
+                case 'pending':
+                    if (!li.classList.contains('completed')) {
+                        li.style.display = 'block';
+                    } else {
+                        li.style.display = 'none';
+                    }
+                    break;
+            }
+        });
+    }
+
+    // Function to clear all tasks from the list
+    function clearTasks() {
+        const taskList = document.getElementById('task-list');
+        taskList.innerHTML = '';
+    }
+
+    // Default filter on page load
+    window.onload = function() {
+        filterTasks('all');
+    };
+</script>
+</body>
+</html>
